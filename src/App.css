@@ -1,38 +1,149 @@
-.App {
-  text-align: center;
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: poppins, Arial, Helvetica, sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+	background: linear-gradient(to right, rgb(246, 192, 44), rgb(231, 128, 9));
+	color: white;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+:root {
+	--success: rgb(65, 224, 65);
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.container {
+	max-width: 500px !important;
+	padding: 10px !important;
+	margin: auto !important;
 }
 
-.App-link {
-  color: #61dafb;
+.form {
+	display: flex;
+	gap: 1rem;
+	flex-direction: column;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.form input,
+.form button,
+form .select select {
+	padding: 10px;
+	font-size: 1.2rem;
+}
+
+.form .inputs {
+	flex-grow: 1;
+	display: inline-flex;
+}
+
+.form .inputs input {
+	flex-grow: 1;
+	outline: none;
+	background-color: white;
+	border: none;
+}
+
+.form button {
+	border: none;
+	background-color: var(--success);
+	outline: none;
+	cursor: pointer;
+	padding: 10px 18px;
+}
+
+.form .select select {
+	padding: 10px 50px 10px 10px;
+	height: 100%;
+	width: 100%;
+	background-color: white;
+}
+
+.todoList {
+	list-style: none;
+	padding: 0 !important;
+}
+
+.todoList li {
+	display: flex;
+	background-color: white;
+	color: black;
+	margin: 10px 0;
+	border-radius: 5px;
+	gap: 1rem;
+	transition: 0.5s;
+	opacity: 1;
+}
+
+.todoList .btnCheck,
+.todoList .btnTrash {
+	background-color: transparent;
+	outline: none;
+	border: none;
+	cursor: pointer;
+}
+
+.todoList .data {
+	flex-grow: 1;
+}
+
+.todoList .data,
+.todoList .btnCheck,
+.todoList .btnTrash {
+	padding: 10px;
+}
+
+.btnTrash svg,
+.btnCheck svg {
+	user-select: none;
+	pointer-events: none;
+}
+
+.select select {
+	border: none;
+	outline: none;
+	appearance: none;
+}
+
+.select {
+	position: relative;
+	cursor: pointer;
+}
+
+.select::after {
+	content: "\25bc";
+	position: absolute;
+	top: 0;
+	right: 0;
+	color: black;
+	padding: 0 20px;
+	height: 100%;
+	pointer-events: none;
+	background: linear-gradient(to right, rgb(128, 255, 0), rgb(0, 255, 76));
+	color: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.completed {
+	opacity: 0.7 !important;
+	text-decoration: line-through;
+}
+
+.thisThat-enter {
+	opacity: 0 !important;
+}
+.thisThat-enter-active {
+	opacity: 1 !important;
+	transition: opacity 500ms ease-in !important;
+}
+.thisThat-exit {
+	opacity: 1 !important;
+}
+.thisThat-exit-active {
+	transition: 500ms !important;
+	transform: translateY(30px) rotateZ(10deg);
+	opacity: 0 !important;
 }
