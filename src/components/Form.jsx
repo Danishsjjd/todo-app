@@ -1,30 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { setSingleTodoData } from "../store/todoSlice";
+import {
+	setSingleTodoData,
+	setFilterData,
+	setSingleFilterData,
+} from "../store/todoSlice";
 import { database } from "../config/firebase";
 import { addDoc, collection } from "firebase/firestore";
 import { toast } from "react-toastify";
 
 export default function Form() {
 	const dispatch = useDispatch();
+	const todoData = useSelector((state) => state.todoSlice.todoData);
 	const [todo, setTodo] = useState("");
+	const [status, setStatus] = useState("");
 
 	const userId = useSelector((state) => state.authSlice.userData.uid);
 	const collectionRef = collection(database, "todo/");
 
-	const filterChangeHandler = (e) => {
-		const value = e.target.value
-		switch (value) {
-			case "all":
-				
+	useEffect(() => {
+		filterTodo();
+	}, [status, todoData]);
+
+	function filterTodo() {
+		switch (status) {
+			case "completed":
+				const filterData = todoData.filter(
+					(item) => item.completed === true
+				);
+				dispatch(setFilterData(filterData));
 				break;
-		
+
+			case "remaining":
+				console.log("working");
+				const filterItems = todoData.filter(
+					(item) => item.completed === false
+				);
+				dispatch(setFilterData(filterItems));
+				break;
 			default:
+				dispatch(setFilterData(todoData));
 				break;
 		}
-	};
+	}
 
+	const filterChangeHandler = (e) => {
+		const value = e.target.value;
+		setStatus(value);
+	};
 	const submitHandler = (e) => {
 		e.preventDefault();
 		if (!todo) return alert("please Enter todo first");
@@ -36,6 +60,7 @@ export default function Form() {
 		addDoc(collectionRef, { ...finalData })
 			.then((data) => {
 				dispatch(setSingleTodoData({ ...finalData, id: data.id }));
+				dispatch(setSingleFilterData({ ...finalData, id: data.id }));
 			})
 			.catch((error) => {
 				toast.error(error.message);

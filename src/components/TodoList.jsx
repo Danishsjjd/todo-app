@@ -1,6 +1,6 @@
 import { FaTrash, FaCheck } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { setTodoData } from "../store/todoSlice";
+import { setTodoData, setFilterData } from "../store/todoSlice";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { useEffect } from "react";
 import { database } from "../config/firebase";
@@ -21,6 +21,7 @@ export default function TodoList() {
 	const queryRef = query(collectionRef, where("userId", "==", userId));
 	const dispatch = useDispatch();
 	const todoData = useSelector((state) => state.todoSlice.todoData);
+	const filterData = useSelector((state) => state.todoSlice.filterData);
 	const checkHandler = (todo) => {
 		const newTodo = { ...todo, completed: !todo.completed };
 		const newTodoData = todoData.map((item) => {
@@ -57,14 +58,16 @@ export default function TodoList() {
 			});
 
 			dispatch(setTodoData(finalData));
+			dispatch(setFilterData(finalData));
 		}
 		getDocuments();
 	}, []);
+
 	return (
 		<>
 			<TransitionGroup component="ul" className="todoList">
-				{todoData &&
-					todoData.map((todo) => (
+				{filterData &&
+					filterData.map((todo) => (
 						<CSSTransition
 							key={todo.id}
 							timeout={500}

@@ -1,13 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { v4 } from "uuid";
 
 const todoSlice = createSlice({
 	name: "todoSlice",
 	initialState: {
 		todoData: [],
-		filterData: function () {
-			return this.todoData;
-		},
+		filterData: [],
 	},
 	reducers: {
 		setSingleTodoData: (state, action) => {
@@ -19,8 +16,12 @@ const todoSlice = createSlice({
 		setFilterData: (state, action) => {
 			state.filterData = action.payload;
 		},
+		setSingleFilterData: (state, action) => {
+			state.todoData = [...state.todoData, action.payload];
+		},
 	},
 });
 
 export default todoSlice.reducer;
-export const { setSingleTodoData, setTodoData } = todoSlice.actions;
+export const { setSingleTodoData, setTodoData, setFilterData, setSingleFilterData} =
+	todoSlice.actions;
