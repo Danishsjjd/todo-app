@@ -33,7 +33,6 @@ export default function Form() {
 				break;
 
 			case "remaining":
-				console.log("working");
 				const filterItems = todoData.filter(
 					(item) => item.completed === false
 				);
