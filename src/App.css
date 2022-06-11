@@ -137,13 +137,13 @@ form .select select {
 }
 .thisThat-enter-active {
 	opacity: 1 !important;
-	transition: opacity 500ms ease-in !important;
+	/* transition: opacity 500ms ease-in !important; */
 }
 .thisThat-exit {
 	opacity: 1 !important;
 }
 .thisThat-exit-active {
-	transition: 500ms !important;
-	transform: translateY(30px) rotateZ(10deg);
+	/* transition: 500ms !important;
+	transform: translateY(30px) rotateZ(10deg); */
 	opacity: 0 !important;
 }
