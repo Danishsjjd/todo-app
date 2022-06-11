@@ -1,11 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState, useLayoutEffect } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import {
-	setSingleTodoData,
-	setFilterData,
-	setSingleFilterData,
-} from "../store/todoSlice";
+import { setFilterData } from "../store/todoSlice";
 import { database } from "../config/firebase";
 import { addDoc, collection } from "firebase/firestore";
 import { toast } from "react-toastify";
@@ -19,9 +15,9 @@ export default function Form() {
 	const userId = useSelector((state) => state.authSlice.userData.uid);
 	const collectionRef = collection(database, "todo/");
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		filterTodo();
-	}, [status, todoData]);
+	}, [todoData, status]);
 
 	function filterTodo() {
 		switch (status) {
@@ -48,7 +44,7 @@ export default function Form() {
 		const value = e.target.value;
 		setStatus(value);
 	};
-	const submitHandler = (e) => {
+	const submitHandler = async (e) => {
 		e.preventDefault();
 		if (!todo) return alert("please Enter todo first");
 		const finalData = {
@@ -56,11 +52,7 @@ export default function Form() {
 			completed: false,
 			userId: userId,
 		};
-		addDoc(collectionRef, { ...finalData })
-			.then((data) => {
-				dispatch(setSingleTodoData({ ...finalData, id: data.id }));
-				dispatch(setSingleFilterData({ ...finalData, id: data.id }));
-			})
+		await addDoc(collectionRef, { ...finalData })
 			.catch((error) => {
 				toast.error(error.message);
 			});

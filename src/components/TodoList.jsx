@@ -1,6 +1,6 @@
 import { FaTrash, FaCheck } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { setTodoData, setFilterData } from "../store/todoSlice";
+import { setTodoData } from "../store/todoSlice";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { useEffect } from "react";
 import { database } from "../config/firebase";
@@ -16,40 +16,36 @@ import {
 
 export default function TodoList() {
 	const userId = useSelector((state) => state.authSlice.userData.uid);
-	const collectionRef = collection(database, "todo/");
-	const queryRef = query(collectionRef, where("userId", "==", userId));
+	const cloudLogin = useSelector((state) => state.authSlice.cloudLogin);
 	const dispatch = useDispatch();
+	const collectionRef = collection(database, "todo/");
 	const filterData = useSelector((state) => state.todoSlice.filterData);
 	const checkHandler = (todo) => {
 		const docRef = doc(database, `todo/${todo.id}`);
-		updateDoc(docRef, { ...todo, completed: !todo.completed })
+		updateDoc(docRef, { ...todo, completed: !todo.completed });
 	};
 	const deleteHandler = (todo) => {
 		const docRef = doc(database, "todo", todo.id);
-		deleteDoc(docRef)
+		deleteDoc(docRef);
 	};
 
 	useEffect(() => {
-		onSnapshot(queryRef, (snapshot) => {
-			dispatch(
-				setTodoData(
-					snapshot.docs.map((item) => ({ ...item.data(), id: item.id }))
-				)
+		if (cloudLogin) {
+			onSnapshot(
+				query(collectionRef, where("userId", "==", userId)),
+				(snapshot) => {
+					dispatch(
+						setTodoData(
+							snapshot.docs.map((item) => ({
+								...item.data(),
+								id: item.id,
+							}))
+						)
+					);
+				}
 			);
-			dispatch(
-				setFilterData(
-					snapshot.docs.map((item) => ({ ...item.data(), id: item.id }))
-				)
-			);
-			return () => {
-				dispatch(setTodoData([]));
-			};
-		});
-
-		return () => {
-			setTodoData([]);
-		};
-	}, []);
+		}
+	}, [cloudLogin]);
 
 	return (
 		<>
